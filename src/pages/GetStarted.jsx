@@ -14,10 +14,10 @@ const GetStarted = () => {
       >
         {/* Title */}
         <h1 className="text-4xl font-bold mb-4">
-          Welcome to <span className="text-red-500">Wemet</span>
+          Find Love on <span className="text-red-500">Igotboo</span>
         </h1>
         <p className="text-gray-600 mb-6">
-          Connect with real people, share experiences, and build meaningful relationships.  
+          Create your dating profile, match with compatible singles, and start your journey to finding love.
         </p>
 
         {/* Animated Rocket Icon */}
@@ -35,7 +35,7 @@ const GetStarted = () => {
           to="/app" 
           className="px-6 py-3 text-lg font-semibold text-white bg-red-500 rounded-full flex items-center justify-center gap-2 shadow-md hover:bg-red-600 transition-all transform hover:scale-105"
         >
-          Get Started
+          Create Your Profile
         </Link>
       </motion.div>
     </section>

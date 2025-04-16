@@ -20,13 +20,20 @@ const AppLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
 
+  const profileCompletion = 30; // This would come from your user context/state
+  const matchCount = 5; // This would come from your user context/state
+
   const navigation = [
     { name: "Home", href: "/app", icon: Home },
+    { 
+      name: "Matches", 
+      href: "/app/matches", 
+      icon: Users,
+      badge: matchCount
+    },
     { name: "Messages", href: "/app/messages", icon: MessageSquare },
     { name: "Profile", href: "/app/profile", icon: User },
     { name: "Notifications", href: "/app/notifications", icon: Bell },
-    { name: "Friends", href: "/app/friends", icon: Users },
-    { name: "Saved", href: "/app/saved", icon: Bookmark },
     { name: "Settings", href: "/app/settings", icon: Settings },
   ];
 
@@ -74,6 +81,19 @@ const AppLayout = ({ children }) => {
           </div>
         </div>
 
+        {/* Profile Completion */}
+        <div className="px-4 py-3 border-b">
+          <div className="flex items-center space-x-2">
+            <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-red-500 to-pink-500 transition-all duration-500"
+                style={{ width: `${profileCompletion}%` }}
+              />
+            </div>
+            <span className="text-sm font-medium text-gray-600">{profileCompletion}%</span>
+          </div>
+        </div>
+
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4">
           {navigation.map((item) => {
@@ -86,12 +106,19 @@ const AppLayout = ({ children }) => {
                   isActive ? "bg-red-50 text-red-500" : ""
                 }`}
               >
-                <item.icon
-                  size={20}
-                  className={`${
-                    isActive ? "text-red-500" : "text-gray-500"
-                  }`}
-                />
+                <div className="relative">
+                  <item.icon
+                    size={20}
+                    className={`${
+                      isActive ? "text-red-500" : "text-gray-500"
+                    }`}
+                  />
+                  {item.badge && (
+                    <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-medium rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
                 {isSidebarOpen && (
                   <span className="ml-3">{item.name}</span>
                 )}
@@ -148,4 +175,4 @@ const AppLayout = ({ children }) => {
   );
 };
 
-export default AppLayout; 
+export default AppLayout;

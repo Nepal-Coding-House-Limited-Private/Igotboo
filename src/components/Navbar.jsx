@@ -29,6 +29,9 @@ const Navbar = () => {
         <Link to="/motive" className="flex items-center gap-2 hover:text-red-500 transition-all duration-300">
           <Compass size={20} /> Motive
         </Link>
+        <Link to="/app/matches" className="flex items-center gap-2 hover:text-red-500 transition-all duration-300">
+          <Compass size={20} /> Matches
+        </Link>
       </div>
 
       {/* Button */}

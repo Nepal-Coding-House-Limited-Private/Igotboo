@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/material": "^5.14.20",
     "@tailwindcss/vite": "^4.0.17",
     "framer-motion": "^12.6.2",
     "lucide-react": "^0.484.0",

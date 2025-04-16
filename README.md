@@ -30,3 +30,4 @@ Coming Soon...
    git clone https://github.com/yourusername/igotboo.git
    cd igotboo
    npm run dev
+   

@@ -14,7 +14,7 @@ const About = () => {
         About <span className="text-red-500">Igotboo</span> 🚀
       </motion.h1>
       <p className="text-gray-600 text-lg text-center mt-4 max-w-3xl">
-      Igotboo is a next-gen social platform where people truly connect, engage, and build real relationships. Say goodbye to fake vibes and hello to <span className="font-bold">authentic interactions</span>! 
+      Igotboo is a modern dating platform where singles meet their perfect match, share meaningful moments, and build lasting relationships. Say goodbye to casual encounters and hello to <span className="font-bold">genuine connections</span>! 
       </p>
 
       {/* Cards Section */}
@@ -25,9 +25,9 @@ const About = () => {
           className="p-6 bg-white border border-gray-200 rounded-2xl shadow-xl hover:shadow-2xl transition-all flex flex-col items-center text-center"
         >
           <Users size={50} className="text-red-500" />
-          <h2 className="text-2xl font-bold mt-4">Community First</h2>
+          <h2 className="text-2xl font-bold mt-4">Smart Matching</h2>
           <p className="text-gray-600 mt-2">
-            We focus on **real people, real stories, real connections.** Join a community that cares.
+            Our intelligent algorithm helps you find compatible matches based on your interests, values, and preferences.
           </p>
         </motion.div>
 
@@ -37,9 +37,9 @@ const About = () => {
           className="p-6 bg-white border border-gray-200 rounded-2xl shadow-xl hover:shadow-2xl transition-all flex flex-col items-center text-center"
         >
           <MessageCircle size={50} className="text-red-500" />
-          <h2 className="text-2xl font-bold mt-4">Authentic Chats</h2>
+          <h2 className="text-2xl font-bold mt-4">Safe Dating</h2>
           <p className="text-gray-600 mt-2">
-            Say **goodbye to dry convos**! Wemet makes sure you meet & chat with like-minded people.
+            Enjoy secure messaging, verified profiles, and safety features that let you focus on finding love.
           </p>
         </motion.div>
 
@@ -49,9 +49,9 @@ const About = () => {
           className="p-6 bg-white border border-gray-200 rounded-2xl shadow-xl hover:shadow-2xl transition-all flex flex-col items-center text-center"
         >
           <HeartHandshake size={50} className="text-red-500" />
-          <h2 className="text-2xl font-bold mt-4">Build Relationships</h2>
+          <h2 className="text-2xl font-bold mt-4">Find True Love</h2>
           <p className="text-gray-600 mt-2">
-            Meet new people, create friendships, and maybe find **the one!**  
+            Connect with genuine singles, go on meaningful dates, and discover your perfect match!
           </p>
         </motion.div>
       </div>
