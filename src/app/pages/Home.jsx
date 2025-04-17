@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
-import Stories from '../components/Stories';
-import PostCreator from '../components/PostCreator';
-import PostFeed from '../components/PostFeed';
+import Stories from '../components/Culture';
+import PostCreator from '../components/Recomended';
 
 const Home = () => {
   return (
