@@ -30,7 +30,7 @@ function AppContent() {
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/recommended" element={<Recommended />} /> {/* New route */}
         <Route path="/culture" element={<Culture />} /> {/* New route */}
-        <Route path="/app" element={<AppLayout><MainApp /></AppLayout>} />
+        <Route path="/app/*" element={<AppLayout><MainApp /></AppLayout>} />
         <Route path="/app/matches" element={<AppLayout><Matches /></AppLayout>} />
         <Route path="/app/profile" element={<AppLayout><Profile /></AppLayout>} />
         <Route path="/app/profile/edit" element={<AppLayout><EditProfile /></AppLayout>} />

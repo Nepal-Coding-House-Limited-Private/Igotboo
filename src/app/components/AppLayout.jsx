@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import Logo from '../upload/logo.png'
+import Logo from '../upload/logo.png';
 import {
   Home,
   Mail,
@@ -40,6 +40,13 @@ const AppLayout = ({ children }) => {
     { name: "Profile", href: "/app/profile", icon: User },
   ];
 
+  const moreOptions = [
+    { name: "Help & Support", href: "/app/help" },
+    { name: "Settings", href: "/app/settings" },
+    { name: "Privacy Policy", href: "/app/privacy" },
+    { name: "Logout", href: "/logout" },
+  ];
+
   return (
     <div className="flex bg-gray-50 text-sm font-sans antialiased min-h-screen">
       {/* Sidebar (Desktop) */}
@@ -47,11 +54,7 @@ const AppLayout = ({ children }) => {
         {/* Logo */}
         <div className="p-4 flex items-center justify-center">
           <Link to="/app">
-            <img
-              src= {Logo}
-              alt="Logo"
-              className="w-10 h-10 rounded-md"
-            />
+            <img src={Logo} alt="Logo" className="w-10 h-10 rounded-md" />
           </Link>
         </div>
 
@@ -154,8 +157,18 @@ const AppLayout = ({ children }) => {
                 onClick={() => setIsMoreOpen(false)}
                 className="text-gray-500 hover:text-gray-900"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -183,17 +196,25 @@ const AppLayout = ({ children }) => {
             {navigation.find((item) => item.href === location.pathname)?.name || "App"}
           </h2>
           <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-gray-100 rounded-full" aria-label="Notifications">
+            <button
+              className="p-2 hover:bg-gray-100 rounded-full"
+              aria-label="Notifications"
+            >
               <Bell size={28} className="text-gray-900" />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full" aria-label="Add new">
+            <button
+              className="p-2 hover:bg-gray-100 rounded-full"
+              aria-label="Add new"
+            >
               <Plus size={28} className="text-gray-900" />
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <main className="flex-1 overflow-auto bg-gray-50 p-4 pb-16 sm:pb-4">{children}</main>
+        <main className="flex-1 overflow-auto bg-gray-50 p-4 pb-16 sm:pb-4">
+          {children}
+        </main>
       </div>
     </div>
   );
