@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Home, Info, Compass, Rocket } from "lucide-react"; // Importing icons
 import { motion } from "framer-motion"; // For animations
+import MessagePopup from "./MessagePopup";
 
 const Navbar = () => {
   return (
@@ -8,7 +9,7 @@ const Navbar = () => {
       initial={{ opacity: 0, y: -20 }} 
       animate={{ opacity: 1, y: 0 }} 
       transition={{ duration: 0.5 }} 
-      className="flex justify-between items-center p-4 bg-white text-gray-900 shadow-lg rounded-xl mx-4 mt-4"
+      className="flex justify-between items-center p-3 bg-white text-gray-900 shadow-lg rounded-xl mx-3 mt-3"
     >
       {/* Logo */}
       <motion.h2 
@@ -19,7 +20,7 @@ const Navbar = () => {
       </motion.h2>
 
       {/* Links */}
-      <div className="flex gap-6 text-lg">
+      <div className="flex gap-4 text-base">
         <Link to="/" className="flex items-center gap-2 hover:text-red-500 transition-all duration-300">
           <Home size={20} /> Home
         </Link>
@@ -29,9 +30,7 @@ const Navbar = () => {
         <Link to="/motive" className="flex items-center gap-2 hover:text-red-500 transition-all duration-300">
           <Compass size={20} /> Motive
         </Link>
-        <Link to="/app/matches" className="flex items-center gap-2 hover:text-red-500 transition-all duration-300">
-          <Compass size={20} /> Matches
-        </Link>
+        <MessagePopup />
       </div>
 
       {/* Button */}

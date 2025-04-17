@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { User, Camera, MapPin, Briefcase, GraduationCap, X, Check } from "lucide-react";
+import { MapPin, Briefcase, GraduationCap, X, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PhotoUpload from "../components/PhotoUpload";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -121,28 +122,10 @@ const EditProfile = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Profile Picture */}
             <div className="flex items-center space-x-6">
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                  {previewImage ? (
-                    <img
-                      src={previewImage}
-                      alt="Profile preview"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <User size={64} className="text-gray-400" />
-                  )}
-                </div>
-                <label className="absolute bottom-0 right-0 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors cursor-pointer">
-                  <Camera size={20} />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                </label>
-              </div>
+              <PhotoUpload
+                initialImage={previewImage}
+                onImageChange={(imageData) => setPreviewImage(imageData)}
+              />
             </div>
 
             {/* Basic Information */}
@@ -366,4 +349,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile; 
+export default EditProfile;

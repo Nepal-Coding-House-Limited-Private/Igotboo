@@ -9,28 +9,21 @@ import {
   LogOut,
   Menu,
   X,
-  Search,
   Plus,
   Users,
-  Bookmark,
   HelpCircle,
 } from "lucide-react";
 
 const AppLayout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
-  const profileCompletion = 30; // This would come from your user context/state
-  const matchCount = 5; // This would come from your user context/state
+  const profileCompletion = 30;
+  const matchCount = 5;
 
   const navigation = [
     { name: "Home", href: "/app", icon: Home },
-    { 
-      name: "Matches", 
-      href: "/app/matches", 
-      icon: Users,
-      badge: matchCount
-    },
+    { name: "Matches", href: "/app/matches", icon: Users, badge: matchCount },
     { name: "Messages", href: "/app/messages", icon: MessageSquare },
     { name: "Profile", href: "/app/profile", icon: User },
     { name: "Notifications", href: "/app/notifications", icon: Bell },
@@ -38,138 +31,114 @@ const AppLayout = ({ children }) => {
   ];
 
   return (
-    <div className="h-screen flex bg-gray-50">
+    <div className="h-screen flex bg-gray-50 text-sm font-sans antialiased">
       {/* Sidebar */}
       <div
         className={`${
-          isSidebarOpen ? "w-64" : "w-20"
-        } bg-white border-r transition-all duration-300 ease-in-out flex flex-col`}
+          isSidebarOpen ? "w-48" : "w-14"
+        } bg-white border-r transition-all duration-300 ease-in-out flex flex-col shadow-sm`}
       >
-        {/* Logo and Toggle */}
-        <div className="p-4 flex items-center justify-between border-b">
+        {/* Logo & Toggle */}
+        <div className="p-3 flex items-center justify-between border-b">
           {isSidebarOpen && (
-            <Link to="/app" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold">W</span>
+            <Link to="/app" className="flex items-center gap-2 ml-1">
+              <div className="w-7 h-7 bg-red-500 rounded-md flex items-center justify-center">
+                <span className="text-white font-bold text-sm">W</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">Wemet</span>
+              <span className="text-lg font-semibold text-gray-900">Wemet</span>
             </Link>
           )}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 hover:bg-gray-100 rounded-lg"
+            className="p-1 ml-auto hover:bg-gray-100 rounded-md"
+            aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
             {isSidebarOpen ? (
-              <X size={20} className="text-gray-500" />
+              <X size={18} className="text-gray-500" />
             ) : (
-              <Menu size={20} className="text-gray-500" />
+              <Menu size={18} className="text-gray-500" />
             )}
           </button>
         </div>
 
-        {/* Search */}
-        <div className="p-4 border-b">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder={isSidebarOpen ? "Search..." : ""}
-              className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-gray-50 ${
-                !isSidebarOpen && "w-10"
-              }`}
-            />
-          </div>
-        </div>
-
-        {/* Profile Completion */}
-        <div className="px-4 py-3 border-b">
-          <div className="flex items-center space-x-2">
-            <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-red-500 to-pink-500 transition-all duration-500"
-                style={{ width: `${profileCompletion}%` }}
-              />
-            </div>
-            <span className="text-sm font-medium text-gray-600">{profileCompletion}%</span>
-          </div>
-        </div>
-
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
+        <nav className="flex-1 overflow-y-auto py-3 space-y-1">
           {navigation.map((item) => {
             const isActive = location.pathname === item.href;
             return (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 ${
-                  isActive ? "bg-red-50 text-red-500" : ""
+                title={item.name}
+                className={`group flex items-center px-3 py-2 rounded-md transition-all ${
+                  isActive
+                    ? "bg-red-100 text-red-600 font-medium"
+                    : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <div className="relative">
+                <div className="relative flex-shrink-0">
                   <item.icon
-                    size={20}
+                    size={18}
                     className={`${
-                      isActive ? "text-red-500" : "text-gray-500"
+                      isActive
+                        ? "text-red-500"
+                        : "text-gray-500 group-hover:text-red-400"
                     }`}
                   />
                   {item.badge && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-medium rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                    <span className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
                       {item.badge}
                     </span>
                   )}
                 </div>
                 {isSidebarOpen && (
-                  <span className="ml-3">{item.name}</span>
+                  <span className="ml-3 text-sm tracking-tight">{item.name}</span>
                 )}
               </Link>
             );
           })}
         </nav>
 
-        {/* Bottom Section */}
-        <div className="p-4 border-t">
-          <div className="space-y-2">
-            <Link
-              to="/app/help"
-              className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg"
-            >
-              <HelpCircle size={20} className="text-gray-500" />
-              {isSidebarOpen && <span className="ml-3">Help & Support</span>}
-            </Link>
-            <button
-              className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg"
-            >
-              <LogOut size={20} className="text-gray-500" />
-              {isSidebarOpen && <span className="ml-3">Logout</span>}
-            </button>
-          </div>
+        {/* Bottom */}
+        <div className="p-3 border-t mt-auto space-y-1">
+          <Link
+            to="/app/help"
+            title="Help & Support"
+            className="flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"
+          >
+            <HelpCircle size={18} className="text-gray-500" />
+            {isSidebarOpen && <span className="ml-3 text-sm">Help</span>}
+          </Link>
+          <button
+            title="Logout"
+            className="flex items-center w-full px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"
+            aria-label="Logout"
+          >
+            <LogOut size={18} className="text-gray-500" />
+            {isSidebarOpen && <span className="ml-3 text-sm">Logout</span>}
+          </button>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Bar */}
-        <div className="h-16 bg-white border-b flex items-center justify-between px-4">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-semibold text-gray-900">
-              {navigation.find((item) => item.href === location.pathname)?.name || "Wemet"}
-            </h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Bell size={20} className="text-gray-500" />
+        {/* Topbar */}
+        <div className="h-14 bg-white border-b flex items-center justify-between px-4 shadow-sm">
+          <h1 className="text-lg font-semibold text-gray-900 tracking-tight">
+            {navigation.find((item) => item.href === location.pathname)?.name || "Wemet"}
+          </h1>
+          <div className="flex items-center gap-2">
+            <button className="p-2 hover:bg-gray-100 rounded-full" aria-label="Notifications">
+              <Bell size={18} className="text-gray-500" />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <Plus size={20} className="text-gray-500" />
+            <button className="p-2 hover:bg-gray-100 rounded-full" aria-label="Add new">
+              <Plus size={18} className="text-gray-500" />
             </button>
           </div>
         </div>
 
-        {/* Page Content */}
-        <div className="flex-1 overflow-auto">
-          {children}
-        </div>
+        {/* Content */}
+        <main className="flex-1 overflow-auto bg-gray-50 p-4">{children}</main>
       </div>
     </div>
   );
