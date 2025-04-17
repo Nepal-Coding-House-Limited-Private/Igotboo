@@ -21,7 +21,7 @@ Coming Soon...
 
 | Frontend      | Backend         | Database      | Other         |
 | ------------- | --------------- | --------------| ------------- |
-| React / Next.js | Node.js / Express | MongoDB / PostgreSQL | Socket.io, JWT, Cloudinary, OpenAI API (optional AI features) |
+| React  | DJANGO | PostgreSQL | Socket.io, JWT, Cloudinary, OpenAI API (optional AI features) |
 
 ## 📦 Installation
 
