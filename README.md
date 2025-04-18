@@ -1,33 +1,29 @@
-# 💘 Igotboo - The Modern Dating Experience
+# 💘 Igotboo – The Modern Dating Experience
 
-Welcome to **Igotboo**, a modern, intuitive, and safe dating platform that connects people through personality, interests, and vibes — not just photos.
+Welcome to **Igotboo**, a next-generation dating platform designed to foster meaningful connections through personality, shared interests, and real conversations — not just appearances.
 
 ## 🌐 Live Demo
 
-Coming Soon...
+**Coming Soon...** Stay tuned for the launch!
 
-## 🚀 Features
+## 🚀 Key Features
 
 - 💬 Real-time Chat & Messaging  
-- 🔍 Smart Matching Algorithm  
-- 📍 Location-based Search  
-- 🛡️ Privacy-focused & Secure  
-- 🧠 AI-driven Profile Suggestions  
-- 📸 Profile Verification  
-- ❤️ Like, Match, and Chat system  
-- 📱 Mobile-first Design  
+- 🛡️ End-to-End Privacy & Security  
+- 📸 Profile Photo Verification  
+- ❤️ Intelligent Matchmaking System (Like, Match & Chat)  
+- 📱 Fully Responsive & Mobile-First Design  
 
-## 🛠 Tech Stack
+## 🧰 Tech Stack
 
-| Frontend      | Backend         | Database      | Other         |
-| ------------- | --------------- | --------------| ------------- |
-| React  | DJANGO | PostgreSQL | Socket.io, JWT, Cloudinary, OpenAI API (optional AI features) |
+| Frontend       | Backend     | Database     | Integrations                         |
+|----------------|-------------|--------------|--------------------------------------|
+| React.js       | Django      | PostgreSQL   | Socket.io, JWT, Cloudinary, OpenAI API (for smart features) |
 
-## 📦 Installation
+## 📦 Getting Started
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/igotboo.git
-   cd igotboo
-   npm run dev
-   
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/igotboo.git
+cd igotboo
