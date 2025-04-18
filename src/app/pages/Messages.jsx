@@ -1,89 +1,75 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Search, Send, Paperclip, Smile, MoreVertical, Phone, Video } from "lucide-react";
+import { useState } from 'react';
+import { FaPaperPlane, FaCog, FaEnvelope, FaUserCircle, FaArrowLeft } from 'react-icons/fa';
+import Logo from '../upload/logo.png';
 
-const Messages = () => {
-  const { id } = useParams(); // Get the ID from the URL
-  const navigate = useNavigate();
+const MessagePage = () => {
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [messageInput, setMessageInput] = useState('');
 
-  const [messages, setMessages] = useState([
-    { id: 1, sender: "John Doe", content: "Hey, how are you?", timestamp: "2m ago", isSent: false, read: true },
-    { id: 2, sender: "You", content: "I'm doing great! How about you?", timestamp: "1m ago", isSent: true, read: true },
-  ]);
+  // Mock conversation data
+  const conversations = [
+    { id: 1, user: 'Priya Sharma', lastMessage: 'Hey, loved the Diwali post!', time: '2h ago', avatar: null },
+    { id: 2, user: 'Amit Patel', lastMessage: 'Can we discuss the event?', time: '5h ago', avatar: null },
+    { id: 3, user: 'Neha Gupta', lastMessage: 'Check out this temple photo!', time: '1d ago', avatar: null },
+  ];
 
-  const [newMessage, setNewMessage] = useState("");
-  const [selectedContact, setSelectedContact] = useState({
-    id: 1,
-    name: "John Doe",
-    status: "Online",
-    initials: "JD",
-    lastMessage: "Hey, how are you?",
-    unread: 0,
-    time: "2m ago",
-  });
-
-  const contacts = [
-    { id: 1, name: "John Doe", status: "Online", initials: "JD", lastMessage: "Hey, how are you?", unread: 0, time: "2m ago" },
-    { id: 2, name: "Sarah Wilson", status: "Offline", initials: "SW", lastMessage: "See you tomorrow!", unread: 2, time: "1h ago" },
-    { id: 3, name: "Mike Johnson", status: "Online", initials: "MJ", lastMessage: "Thanks for the help!", unread: 0, time: "3h ago" },
-    { id: 4, name: "Emma Davis", status: "Away", initials: "ED", lastMessage: "Can you review my code?", unread: 1, time: "5h ago" },
+  // Mock messages for the selected conversation
+  const messages = [
+    { id: 1, sender: 'Priya Sharma', text: 'Hey, loved the Diwali post!', time: '2:03 PM' },
+    { id: 2, sender: 'You', text: 'Thanks! Glad you liked it.', time: '2:05 PM' },
+    { id: 3, sender: 'Priya Sharma', text: 'Planning anything for Holi?', time: '2:07 PM' },
   ];
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (newMessage.trim()) {
-      const message = { id: messages.length + 1, sender: "You", content: newMessage.trim(), timestamp: "Just now", isSent: true, read: false };
-      setMessages([...messages, message]);
-      setNewMessage("");
+    if (messageInput.trim()) {
+      console.log('Sending:', messageInput);
+      setMessageInput('');
     }
   };
 
-  const handleContactClick = (contact) => {
-    navigate(`/chat/${contact.id}`); // Navigate to the specific chat
-    setSelectedContact(contact);
-  };
-
   return (
-    <div className="h-screen flex flex-col md:flex-row">
-      {/* Contacts List */}
-      <div className="w-full md:w-1/4 border-b md:border-r bg-gray-50 flex flex-col min-w-0">
-        <div className="p-4 border-b bg-white">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search messages..."
-              className="w-full pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
-            />
+    <div className="min-h-screen bg-white text-black mt-8 ml-4 lg:ml-8 flex flex-col lg:flex-row">
+      {/* Sidebar: Conversation List (Visible by Default on Mobile) */}
+      <div
+        className={`w-full lg:w-80 bg-transparent rounded-xl transition-all duration-300 ${
+          selectedConversation ? 'hidden lg:block' : 'block'
+        }`}
+      >
+        <div className="p-3 lg:p-4 border-b border-gray-200 flex justify-between items-center">
+          <h2 className="text-lg font-semibold text-black">Messages</h2>
+          <div className="flex space-x-3">
+            <button className="text-gray-500 hover:text-black transition-colors duration-200" title="New Message">
+              <FaEnvelope size={16} />
+            </button>
+            <button className="text-gray-500 hover:text-black transition-colors duration-200" title="Settings">
+              <FaCog size={16} />
+            </button>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto">
-          {contacts.map((contact) => (
+        <div className="h-[calc(100vh-120px)] overflow-y-auto">
+          {conversations.map((conv) => (
             <div
-              key={contact.id}
-              className={`p-4 hover:bg-white cursor-pointer transition-colors ${selectedContact.id === contact.id ? "bg-gray-100" : ""}`}
-              onClick={() => handleContactClick(contact)}
+              key={conv.id}
+              className={`p-3 border-b border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors duration-200 ${
+                selectedConversation === conv.id ? 'bg-gray-200' : ''
+              }`}
+              onClick={() => setSelectedConversation(conv.id)}
             >
-              <div className="flex items-center space-x-4">
-                <div className="relative flex-shrink-0">
-                  <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                    <span className="text-gray-500 font-medium">{contact.initials}</span>
-                  </div>
-                  {contact.status === "Online" && (
-                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+              <div className="flex items-center space-x-2">
+                <div className="text-gray-500">
+                  {conv.avatar ? (
+                    <img src={conv.avatar} alt={conv.user} className="w-8 h-8 rounded-full" />
+                  ) : (
+                    <FaUserCircle size={32} />
                   )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-semibold text-gray-900 truncate">{contact.name}</h3>
-                    <span className="text-xs text-gray-400 flex-shrink-0">{contact.time}</span>
+                <div className="flex-1">
+                  <div className="flex justify-between">
+                    <h3 className="text-sm font-medium text-black">{conv.user}</h3>
+                    <span className="text-xs text-gray-500">{conv.time}</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm text-gray-500 truncate">{contact.lastMessage}</p>
-                    {contact.unread > 0 && (
-                      <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full flex-shrink-0">{contact.unread}</span>
-                    )}
-                  </div>
+                  <p className="text-xs text-gray-600 truncate">{conv.lastMessage}</p>
                 </div>
               </div>
             </div>
@@ -91,85 +77,72 @@ const Messages = () => {
         </div>
       </div>
 
-      {/* Chat Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Chat Header */}
-        <div className="p-4 border-b bg-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4 min-w-0">
-              <div className="relative flex-shrink-0">
-                <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-                  <span className="text-gray-500 font-medium">{selectedContact.initials}</span>
+      {/* Main Chat Area (Visible on Mobile After Clicking a Chat) */}
+      <div
+        className={`flex-1 bg-transparent rounded-xl lg:ml-4 mt-4 lg:mt-0 ${
+          selectedConversation ? 'block' : 'hidden lg:block'
+        }`}
+      >
+        {selectedConversation ? (
+          <>
+            <div className="p-3 lg:p-4 border-b border-gray-200 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <button
+                  className="lg:hidden text-gray-500 hover:text-black transition-colors duration-200"
+                  onClick={() => setSelectedConversation(null)}
+                  >
+                    <FaArrowLeft size={16} />
+                  </button>
+                    <h2 className="text-base lg:text-lg font-semibold text-black">
+                      {conversations.find((c) => c.id === selectedConversation)?.user}
+                    </h2>
+                  </div>
                 </div>
-                {selectedContact.status === "Online" && (
-                  <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
-                )}
+                <div className="p-4 lg:p-6 h-[calc(100vh-180px)] lg:h-[calc(100vh-200px)] overflow-y-auto flex flex-col space-y-3">
+                  {messages.map((msg) => (
+                    <div
+                      key={msg.id}
+                      className={`flex ${msg.sender === 'You' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[80%] p-2.5 rounded-2xl text-sm ${
+                          msg.sender === 'You' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-black'
+                        } transition-all duration-200`}
+                      >
+                        <p>{msg.text}</p>
+                        <span className="text-xs opacity-60 block mt-0.5">{msg.time}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="p-3 lg:p-4 border-t border-gray-200">
+                  <form onSubmit={handleSendMessage} className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={messageInput}
+                      onChange={(e) => setMessageInput(e.target.value)}
+                      placeholder="Type a message..."
+                      className="flex-1 p-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black placeholder-gray-500"
+                    />
+                    <button
+                      type="submit"
+                      className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200"
+                      disabled={!messageInput.trim()}
+                    >
+                      <FaPaperPlane size={14} />
+                    </button>
+                  </form>
+                </div>
+              </>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center">
+                <img src={Logo} alt="Logo" className="w-16 h-16 lg:w-24 lg:h-24 mb-4" />
+                <p className="text-gray-500 text-sm lg:text-lg">Select a conversation to start chatting</p>
               </div>
-              <div className="min-w-0">
-                <h3 className="font-semibold text-gray-900 truncate">{selectedContact.name}</h3>
-                <p className="text-sm text-gray-500">{selectedContact.status}</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4 flex-shrink-0">
-              <button className="text-gray-500 hover:text-blue-500 p-2 hover:bg-gray-100 rounded-full">
-                <Phone size={20} />
-              </button>
-              <button className="text-gray-500 hover:text-blue-500 p-2 hover:bg-gray-100 rounded-full">
-                <Video size={20} />
-              </button>
-              <button className="text-gray-500 hover:text-blue-500 p-2 hover:bg-gray-100 rounded-full">
-                <MoreVertical size={20} />
-              </button>
-            </div>
+            )}
           </div>
         </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-          {messages.map((message) => (
-            <div key={message.id} className={`flex items-start space-x-2 ${message.isSent ? "justify-end" : ""}`}>
-              {!message.isSent && (
-                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-                  <span className="text-gray-500 text-sm font-medium">{message.sender[0]}</span>
-                </div>
-              )}
-              <div className={`rounded-lg p-3 max-w-[70%] break-words ${message.isSent ? "bg-blue-500 text-white" : "bg-white text-gray-800 shadow-sm"}`}>
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                <div className="flex items-center justify-end space-x-1 mt-1">
-                  <span className={`text-xs ${message.isSent ? "text-white/70" : "text-gray-500"}`}>{message.timestamp}</span>
-                  {message.isSent && <span className="text-xs text-white/70">{message.read ? "✓✓" : "✓"}</span>}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Message Input */}
-        <div className="p-4 border-t bg-white">
-          <form onSubmit={handleSendMessage}>
-            <div className="flex items-center space-x-4">
-              <button type="button" className="text-gray-500 hover:text-blue-500 p-2 hover:bg-gray-100 rounded-full flex-shrink-0">
-                <Paperclip size={20} />
-              </button>
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
-                className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 min-w-0"
-              />
-              <button type="button" className="text-gray-500 hover:text-blue-500 p-2 hover:bg-gray-100 rounded-full flex-shrink-0">
-                <Smile size={20} />
-              </button>
-              <button type="submit" className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors flex-shrink-0">
-                <Send size={20} />
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Messages;
+      );
+    };
+    
+    export default MessagePage;

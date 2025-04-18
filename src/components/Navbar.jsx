@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
-import { Home, Info, Compass, Rocket } from "lucide-react"; // Importing icons
+import { Home, Info, Compass, Rocket, Menu, X } from "lucide-react"; // Importing icons
 import { motion } from "framer-motion"; // For animations
+import { useState } from "react";
 import MessagePopup from "./MessagePopup";
 
 const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <motion.nav 
       initial={{ opacity: 0, y: -20 }} 
@@ -19,8 +22,15 @@ const Navbar = () => {
         Igotboo
       </motion.h2>
 
+      {/* Hamburger Menu */}
+      <div className="sm:hidden">
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
       {/* Links */}
-      <div className="flex gap-4 text-base">
+      <div className={`flex-col sm:flex-row sm:flex gap-4 text-base ${isMenuOpen ? "flex" : "hidden"} sm:block`}>
         <Link to="/" className="flex items-center gap-2 hover:text-red-500 transition-all duration-300">
           <Home size={20} /> Home
         </Link>
@@ -34,7 +44,7 @@ const Navbar = () => {
       </div>
 
       {/* Button */}
-      <motion.div whileHover={{ scale: 1.1 }}>
+      <motion.div whileHover={{ scale: 1.1 }} className="hidden sm:block">
         <Link 
           to="/get-started" 
           className="flex items-center gap-2 bg-red-500 text-white px-5 py-2 rounded-full hover:bg-red-600 transition-all duration-300 shadow-md"

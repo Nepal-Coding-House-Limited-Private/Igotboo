@@ -7,9 +7,9 @@ const PostCreator = () => {
   const [media, setMedia] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const fileInputRef = useRef(null);
-  const modalRef = useRef(null); // Ref to track modal content
+  const modalRef = useRef(null);
 
-  // Mock user profile data (replace with actual user data)
+  // Mock user profile (replace with actual data)
   const userProfile = {
     name: 'John Doe',
     avatar: defaultAvatar,
@@ -18,6 +18,8 @@ const PostCreator = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Creating post:', postContent, media);
+
+    // Reset state
     setPostContent('');
     setMedia(null);
     setShowModal(false);
@@ -28,24 +30,20 @@ const PostCreator = () => {
     if (file) {
       const fileSizeInMB = file.size / (1024 * 1024);
       if (fileSizeInMB > 1024) {
-        alert('The video file size exceeds the 1GB limit. Please upload a smaller file.');
-      } else {
-        setMedia(file);
+        alert('The file size exceeds the 1GB limit. Please upload a smaller file.');
+        return;
       }
+      setMedia(file);
     }
   };
 
-  const handleOpenModal = () => {
-    setShowModal(true);
-  };
-
+  const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => {
     setShowModal(false);
+    setPostContent('');
     setMedia(null);
-    setPostContent(''); // Clear post content on close
   };
 
-  // Handle clicks outside the modal content
   const handleOutsideClick = (e) => {
     if (modalRef.current && !modalRef.current.contains(e.target)) {
       handleCloseModal();
@@ -64,21 +62,22 @@ const PostCreator = () => {
           value={postContent}
           onClick={handleOpenModal}
           placeholder="What's on your mind?"
-          className="flex-1 resize-none border-none focus:ring-0 text-gray-700 placeholder-gray-400 text-sm min-h-[60px] cursor-pointer"
+          className="flex-1 resize-none border-none focus:ring-0 text-gray-700 placeholder-gray-400 text-sm min-h-[60px] cursor-pointer bg-transparent"
           readOnly
         />
       </div>
 
-      {/* Modal for post creation */}
+      {/* Modal */}
       {showModal && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-          onClick={handleOutsideClick} // Close modal on background click
+          onClick={handleOutsideClick}
         >
           <div
-            ref={modalRef} // Reference to modal content
+            ref={modalRef}
             className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full"
           >
+            {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                 <img
@@ -99,6 +98,7 @@ const PostCreator = () => {
               </button>
             </div>
 
+            {/* Form */}
             <form onSubmit={handleSubmit}>
               <textarea
                 value={postContent}
@@ -110,14 +110,14 @@ const PostCreator = () => {
               {/* Media Preview */}
               {media && (
                 <div className="mt-4">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 mb-2">
                     {media.type.startsWith('image') ? 'Selected Image:' : 'Selected Video:'}
                   </p>
-                  <div className="mt-2 flex justify-center">
+                  <div className="flex justify-center">
                     {media.type.startsWith('image') ? (
                       <img
                         src={URL.createObjectURL(media)}
-                        alt="Selected Media"
+                        alt="Selected"
                         className="w-48 h-auto rounded-lg"
                       />
                     ) : (
@@ -130,6 +130,7 @@ const PostCreator = () => {
                 </div>
               )}
 
+              {/* Actions */}
               <div className="mt-4 flex items-center justify-between">
                 <div>
                   <button
@@ -143,7 +144,7 @@ const PostCreator = () => {
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/*, video/*"
+                    accept="image/*,video/*"
                     className="hidden"
                     onChange={handleFileSelect}
                   />

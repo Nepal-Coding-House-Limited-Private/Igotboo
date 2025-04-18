@@ -4,6 +4,7 @@ import About from '../pages/About';
 import GetStarted from '../pages/GetStarted';
 import Motive from '../pages/Motive';
 import Matches from './pages/Matches';
+import EditProfile from './pages/EditProfile';
 
 const MainApp = () => {
   return (

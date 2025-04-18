@@ -1,36 +1,43 @@
 import { useState } from "react";
-import { MapPin, Briefcase, GraduationCap, X, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import PhotoUpload from "../components/PhotoUpload";
+import { X } from "lucide-react";
+import { MapPin, Briefcase } from "lucide-react";
+import { motion } from "framer-motion"; // optional, remove if not using
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const [showSuccess, setShowSuccess] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "John Doe",
     username: "johndoe",
-    location: "New York, USA",
-    occupation: "Software Engineer",
-    about: "I'm a passionate software engineer with experience in web development. I love building user-friendly applications and solving complex problems.",
+    website: "",
+    bio: "I love building user-friendly applications ✨",
+    email: "john@example.com",
+    phone: "+1234567890",
+    gender: "Prefer not to say",
+    location: "",
+    occupation: "",
+    about: "",
     education: {
-      degree: "Computer Science",
-      school: "University Name",
-      year: "2015 - 2019"
+      degree: "",
+      school: "",
+      year: ""
     },
     experience: {
-      title: "Senior Software Engineer",
-      company: "Tech Company",
-      period: "2020 - Present"
+      title: "",
+      company: "",
+      period: ""
     },
-    skills: ["JavaScript", "React", "Node.js", "Python", "SQL"]
+    skills: []
   });
 
+  const [profileImage, setProfileImage] = useState(null);
   const [newSkill, setNewSkill] = useState("");
-  const [previewImage, setPreviewImage] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -38,7 +45,7 @@ const EditProfile = () => {
 
   const handleEducationChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       education: {
         ...prev.education,
@@ -49,7 +56,7 @@ const EditProfile = () => {
 
   const handleExperienceChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       experience: {
         ...prev.experience,
@@ -60,8 +67,8 @@ const EditProfile = () => {
 
   const handleAddSkill = (e) => {
     e.preventDefault();
-    if (newSkill.trim() && !formData.skills.includes(newSkill.trim())) {
-      setFormData(prev => ({
+    if (newSkill.trim() !== "") {
+      setFormData((prev) => ({
         ...prev,
         skills: [...prev.skills, newSkill.trim()]
       }));
@@ -69,10 +76,10 @@ const EditProfile = () => {
     }
   };
 
-  const handleRemoveSkill = (skillToRemove) => {
-    setFormData(prev => ({
+  const handleRemoveSkill = (skill) => {
+    setFormData((prev) => ({
       ...prev,
-      skills: prev.skills.filter(skill => skill !== skillToRemove)
+      skills: prev.skills.filter((s) => s !== skill)
     }));
   };
 
@@ -81,7 +88,7 @@ const EditProfile = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result);
+        setProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -89,7 +96,6 @@ const EditProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
     console.log("Form submitted:", formData);
     setShowSuccess(true);
     setTimeout(() => {
@@ -99,253 +105,211 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
-            <button
-              onClick={() => navigate("/app/profile")}
-              className="text-gray-500 hover:text-red-500"
-            >
-              <X size={24} />
-            </button>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="min-h-screen bg-white pb-10 px-4 md:px-10 pt-10"
+    >
+      <form onSubmit={handleSubmit} className="space-y-8">
+
+        {/* Profile Picture */}
+        <div className="flex items-center space-x-6">
+          <div className="relative w-24 h-24">
+            <img
+              src={profileImage || "https://via.placeholder.com/150?text=Profile"}
+              alt="Profile"
+              className="w-24 h-24 rounded-full object-cover border border-[#cccccc] shadow-sm"
+            />
+            <label className="absolute bottom-0 right-0 bg-white p-1 rounded-full shadow cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+              <span className="text-xs text-gray-600">📷</span>
+            </label>
           </div>
+          <div>
+            <h2 className="text-xl font-semibold">{formData.name}</h2>
+            <p className="text-gray-500">@{formData.username}</p>
+          </div>
+        </div>
 
-          {showSuccess && (
-            <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg flex items-center space-x-2">
-              <Check size={20} />
-              <span>Profile updated successfully!</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Profile Picture */}
-            <div className="flex items-center space-x-6">
-              <PhotoUpload
-                initialImage={previewImage}
-                onImageChange={(imageData) => setPreviewImage(imageData)}
-              />
-            </div>
-
-            {/* Basic Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
+        {/* Basic Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            { label: "Name", name: "name" },
+            { label: "Username", name: "username" },
+            { label: "Email", name: "email", type: "email" },
+            { label: "Phone", name: "phone", type: "tel" },
+            { label: "Gender", name: "gender", type: "select" },
+            { label: "Website", name: "website", type: "url" },
+          ].map(({ label, name, type }) => (
+            <div key={name}>
+              <label className="block text-sm font-medium mb-1">{label}</label>
+              {type === "select" ? (
+                <select
+                  name={name}
+                  value={formData[name]}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Location
-                </label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Occupation
-                </label>
-                <div className="relative">
-                  <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                  <input
-                    type="text"
-                    name="occupation"
-                    value={formData.occupation}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* About */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                About Me
-              </label>
-              <textarea
-                name="about"
-                value={formData.about}
-                onChange={handleChange}
-                rows={4}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-            </div>
-
-            {/* Education */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Education</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Degree
-                  </label>
-                  <input
-                    type="text"
-                    name="degree"
-                    value={formData.education.degree}
-                    onChange={handleEducationChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    School
-                  </label>
-                  <input
-                    type="text"
-                    name="school"
-                    value={formData.education.school}
-                    onChange={handleEducationChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Year
-                  </label>
-                  <input
-                    type="text"
-                    name="year"
-                    value={formData.education.year}
-                    onChange={handleEducationChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Experience */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Experience</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Title
-                  </label>
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.experience.title}
-                    onChange={handleExperienceChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    name="company"
-                    value={formData.experience.company}
-                    onChange={handleExperienceChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Period
-                  </label>
-                  <input
-                    type="text"
-                    name="period"
-                    value={formData.experience.period}
-                    onChange={handleExperienceChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Skills */}
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Skills</h2>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {formData.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-gray-100 rounded-full text-sm flex items-center"
-                  >
-                    {skill}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveSkill(skill)}
-                      className="ml-2 text-gray-500 hover:text-red-500"
-                    >
-                      <X size={14} />
-                    </button>
-                  </span>
-                ))}
-              </div>
-              <form onSubmit={handleAddSkill} className="flex gap-2">
-                <input
-                  type="text"
-                  value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                  placeholder="Add a skill"
-                  className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  className="w-full border border-[#cccccc] rounded-xl px-4 py-2 transition-all duration-300 focus:ring-2 focus:ring-black"
                 >
-                  Add
-                </button>
-              </form>
+                  <option>Prefer not to say</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Custom</option>
+                </select>
+              ) : (
+                <input
+                  type={type || "text"}
+                  name={name}
+                  value={formData[name]}
+                  onChange={handleChange}
+                  className="w-full border border-[#cccccc] rounded-xl px-4 py-2 transition-all duration-300 focus:ring-2 focus:ring-black"
+                />
+              )}
             </div>
+          ))}
+        </div>
 
-            {/* Submit Button */}
-            <div className="flex justify-end space-x-4">
-              <button
-                type="button"
-                onClick={() => navigate("/app/profile")}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+        {/* Location & Occupation */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="relative">
+            <label className="block text-sm font-medium mb-1">Location</label>
+            <MapPin className="absolute left-3 top-10 text-gray-400" size={20} />
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="w-full pl-10 pr-3 py-2 border border-[#cccccc] rounded-xl transition-all duration-300 focus:ring-2 focus:ring-black"
+            />
+          </div>
+          <div className="relative">
+            <label className="block text-sm font-medium mb-1">Occupation</label>
+            <Briefcase className="absolute left-3 top-10 text-gray-400" size={20} />
+            <input
+              type="text"
+              name="occupation"
+              value={formData.occupation}
+              onChange={handleChange}
+              className="w-full pl-10 pr-3 py-2 border border-[#cccccc] rounded-xl transition-all duration-300 focus:ring-2 focus:ring-black"
+            />
+          </div>
+        </div>
+
+        {/* About */}
+        <div>
+          <label className="block text-sm font-medium mb-1">About Me</label>
+          <textarea
+            name="about"
+            value={formData.about}
+            onChange={handleChange}
+            rows={4}
+            className="w-full border border-[#cccccc] rounded-xl px-4 py-2 transition-all duration-300 focus:ring-2 focus:ring-black"
+          />
+        </div>
+
+        {/* Education */}
+        <div>
+          <h2 className="text-xl font-semibold mb-2">Education</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {["degree", "school", "year"].map((field) => (
+              <input
+                key={field}
+                type="text"
+                name={field}
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={formData.education[field]}
+                onChange={handleEducationChange}
+                className="border border-[#cccccc] rounded-xl px-4 py-2 transition-all duration-300 focus:ring-2 focus:ring-black"
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Experience */}
+        <div>
+          <h2 className="text-xl font-semibold mb-2">Experience</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {["title", "company", "period"].map((field) => (
+              <input
+                key={field}
+                type="text"
+                name={field}
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={formData.experience[field]}
+                onChange={handleExperienceChange}
+                className="border border-[#cccccc] rounded-xl px-4 py-2 transition-all duration-300 focus:ring-2 focus:ring-black"
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Skills */}
+        <div>
+          <h2 className="text-xl font-semibold mb-2">Skills</h2>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {formData.skills.map((skill, index) => (
+              <span
+                key={index}
+                className="bg-gray-100 px-3 py-1 rounded-full flex items-center text-sm border border-[#cccccc]"
               >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-              >
-                Save Changes
-              </button>
-            </div>
+                {skill}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSkill(skill)}
+                  className="ml-2 text-red-500"
+                >
+                  <X size={14} />
+                </button>
+              </span>
+            ))}
+          </div>
+          <form onSubmit={handleAddSkill} className="flex gap-2">
+            <input
+              type="text"
+              value={newSkill}
+              onChange={(e) => setNewSkill(e.target.value)}
+              placeholder="Add a skill"
+              className="flex-1 border border-[#cccccc] rounded-xl px-4 py-2 transition-all duration-300 focus:ring-2 focus:ring-black"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 bg-black text-white rounded-full hover:bg-white hover:text-black border border-black transition-all duration-300"
+            >
+              Add
+            </button>
           </form>
         </div>
-      </div>
-    </div>
+
+        {/* Buttons */}
+        <div className="flex justify-end space-x-4">
+          <button
+            type="button"
+            onClick={() => navigate("/app/profile")}
+            className="px-6 py-2 border border-black text-black rounded-full hover:bg-black hover:text-white transition-all duration-300"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-6 py-2 bg-black text-white rounded-full hover:bg-white hover:text-black border border-black transition-all duration-300"
+          >
+            Save Changes
+          </button>
+        </div>
+
+        {/* Success Message */}
+        {showSuccess && (
+          <div className="text-green-600 font-semibold mt-4">
+            Profile updated successfully!
+          </div>
+        )}
+      </form>
+    </motion.div>
   );
 };
 

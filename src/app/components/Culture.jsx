@@ -1,58 +1,87 @@
-import CulturalPhotoGallery from '../components/CulturalPhotoGallery'; 
+import { useState } from 'react';
+import CulturalPhotoGallery from '../components/CulturalPhotoGallery';
 import defaultImage from '../upload/default-cultural-image.jpg';
 
 const CulturalRecommended = () => {
-  // Filtered Hindu-only data
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const hinduRecommendations = [
-    {
-      id: 1,
-      title: 'Hindu Festival: Diwali',
-      culture: 'Hindu',
-      image: defaultImage,
-      description: 'Join the vibrant celebration of Diwali, the festival of lights.',
-    },
-    {
-      id: 5,
-      title: 'Hindu Holi Celebration',
-      culture: 'Hindu',
-      image: defaultImage,
-      description: 'Splash colors and spread joy at the Holi festival.',
-    },
+    { id: 1, image: defaultImage },
+    { id: 2, image: defaultImage },
+    { id: 3, image: defaultImage },
+    { id: 5, image: defaultImage },
+    { id: 6, image: defaultImage },
+    { id: 7, image: defaultImage },
+    { id: 8, image: defaultImage },
+    { id: 9, image: defaultImage },
   ];
 
+  const handleImageClick = (item) => {
+    setSelectedImage(item);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedImage(null);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10">
-      <div className="max-w-4xl w-full bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+    <div className="w-full bg-white">
+      <div className="max-w-4xl mx-auto pl-2 pr-2 overflow-hidden">
+        <h1 className="text-3xl font-bold text-gray-800 mt-0 mb-2">
           Hindu Cultural Highlights
         </h1>
-        <p className="text-gray-600 mb-6">
+        <p className="text-gray-600 mb-4">
           Explore the vibrant and spiritual traditions of Hindu culture.
         </p>
 
-        {/* Recommended Hindu Events */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+        <hr className="mb-4 border-gray-300" />
+
+        <div className="idname">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Siwani Rai</h2>
+          <p className="text-gray-600 mb-4">
+          @Siwanirai
+          </p>
+        </div>
+
+        <div className="flex overflow-x-auto gap-4 py-4">
           {hinduRecommendations.map((item) => (
-            <div
-              key={item.id}
-              className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition"
-            >
+            <div key={item.id} className="flex-shrink-0 cursor-pointer">
               <img
                 src={item.image}
-                alt={item.title}
-                className="w-full h-40 object-cover rounded-t-lg mb-4"
+                alt={`Cultural post ${item.id}`}
+                className="w-32 h-32 object-cover rounded-full border border-gray-300 shadow-sm"
+                onClick={() => handleImageClick(item)}
               />
-              <h2 className="text-lg font-semibold text-gray-800">{item.title}</h2>
-              <p className="text-sm text-gray-600 mb-2">{item.culture}</p>
-              <p className="text-gray-700">{item.description}</p>
             </div>
           ))}
         </div>
-
-        {/* Hindu Photo Gallery */}
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Hindu Cultural Photos</h2>
-        <CulturalPhotoGallery onlyHindu />
       </div>
+
+      {/* Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          onClick={handleCloseModal}
+        >
+          <div
+            className="relative max-w-3xl w-full mx-4"
+            onClick={(e) => e.stopPropagation()} // prevent closing when clicking on image
+          >
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-2 right-2 text-white text-2xl font-bold"
+            >
+              &times;
+            </button>
+            <img
+              src={selectedImage.image}
+              alt="Full view"
+              className="w-full h-auto rounded-lg"
+            />
+            <p className="text-white mt-2 text-center">Image ID: {selectedImage.id}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
