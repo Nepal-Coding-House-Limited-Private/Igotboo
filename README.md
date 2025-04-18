@@ -18,7 +18,7 @@ Welcome to **Igotboo**, a next-generation dating platform designed to foster mea
 
 | Frontend       | Backend     | Database     | Integrations                         |
 |----------------|-------------|--------------|--------------------------------------|
-| React.js       | Django      | PostgreSQL   | Socket.io, JWT, Cloudinary, OpenAI API (for smart features) |
+| React.js       | Django      | PostgreSQL   | Socket.io|
 
 ## 📦 Getting Started
 
