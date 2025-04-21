@@ -25,5 +25,5 @@ Welcome to **Igotboo**, a next-generation dating platform designed to foster mea
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/igotboo.git
+(https://github.com/Nepal-Coding-House-Limited-Private/Igotboo/)
 cd igotboo
