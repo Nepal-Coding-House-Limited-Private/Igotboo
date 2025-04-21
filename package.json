@@ -1,11 +1,16 @@
 {
   "name": "social-media-app",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "start": "react-scripts start",
+    "server": "nodemon server/server.js",
+    "dev": "concurrently \"npm run server\" \"npm run start\"",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev:full": "concurrently \"npm run dev\" \"npm run server\"",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -15,15 +20,26 @@
     "@mui/icons-material": "^5.14.19",
     "@mui/material": "^5.14.20",
     "@tailwindcss/vite": "^4.0.17",
+    "axios": "^1.8.4",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "framer-motion": "^12.6.2",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.484.0",
+    "mongoose": "^8.13.2",
     "react": "^18.3.1",
     "react-avatar-editor": "^13.0.2",
     "react-dom": "^18.3.1",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-image-gallery": "^1.4.0",
     "react-router-dom": "^7.4.0",
+    "react-scripts": "^5.0.1",
     "react-swipeable": "^7.0.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.0.17"
   },
   "devDependencies": {
@@ -31,10 +47,24 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "nodemon": "^3.1.9",
     "vite": "^6.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

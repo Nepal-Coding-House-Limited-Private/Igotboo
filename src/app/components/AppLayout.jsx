@@ -1,383 +1,232 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import Logo from '../upload/logo.png';
 import {
   Home,
-  Mail,
+  Search,
+  Heart,
   User,
   Bell,
   Settings,
-  HelpCircle,
-  Feather,
-  MoreHorizontal,
+  Compass,
+  MessageCircle,
+  PlusSquare,
+  Bookmark,
+  LogOut,
   Users,
-  Plus,
+  Image,
+  X
 } from "lucide-react";
+import authService from '../../services/authService';
+import { toast } from 'react-hot-toast';
 
-const AppLayout = ({ children }) => {
+const CreatePostModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen px-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose}></div>
+        <div className="relative bg-white rounded-lg max-w-lg w-full p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Create Post</h2>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+              <X size={24} />
+            </button>
+          </div>
+          <div className="space-y-4">
+            <textarea
+              className="w-full h-32 p-3 border rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="What's on your mind?"
+            ></textarea>
+            <div className="flex items-center space-x-4">
+              <button className="flex items-center space-x-2 text-gray-600 hover:text-blue-500">
+                <Image size={20} />
+                <span>Add Photo</span>
+              </button>
+            </div>
+            <button className="w-full bg-blue-500 text-white rounded-lg py-2 hover:bg-blue-600 transition-colors">
+              Post
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AppLayout = () => {
   const location = useLocation();
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
-  const [isPostOpen, setIsPostOpen] = useState(false); // State for opening the post modal
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [selectedVideo, setSelectedVideo] = useState(null);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [showCreatePost, setShowCreatePost] = useState(false);
 
-  const profileCompletion = 30;
-  const matchCount = 5;
+  useEffect(() => {
+    const userData = authService.getCurrentUser();
+    if (!userData) {
+      navigate('/login');
+      return;
+    }
+    setUser(userData);
+  }, [navigate]);
+
+  const handleLogout = () => {
+    authService.logout();
+    toast.success('Logged out successfully');
+    navigate('/login');
+  };
 
   const navigation = [
     { name: "Home", href: "/app", icon: Home },
-    { name: "Matches", href: "/app/matches", icon: Users, badge: matchCount },
-    { name: "Messages", href: "/app/messages", icon: Mail },
-    { name: "Profile", href: "/app/profile", icon: User },
+    { name: "Search", href: "/app/search", icon: Search },
+    { name: "Explore", href: "/app/explore", icon: Compass },
+    { name: "Messages", href: "/app/chat", icon: MessageCircle },
     { name: "Notifications", href: "/app/notifications", icon: Bell },
+    { name: "Create", href: "#", icon: PlusSquare, onClick: () => setShowCreatePost(true) },
+    { name: "Profile", href: "/app/profile", icon: User },
+  ];
+
+  const secondaryNav = [
+    { name: "Saved", href: "/app/saved", icon: Bookmark },
     { name: "Settings", href: "/app/settings", icon: Settings },
-    { name: "Post", href: "#", icon: Feather, onClick: () => setIsPostOpen(true) }, // Updated Post to open modal
-    { name: "More", href: "#", icon: MoreHorizontal, onClick: () => setIsMoreOpen(true) },
   ];
 
-  const mobileNavigation = [
-    { name: "Home", href: "/app", icon: Home },
-    { name: "Messages", href: "/app/messages", icon: Mail },
-    { name: "Post", href: "#", icon: Feather, onClick: () => setIsPostOpen(true) }, // Updated Post to open modal
-    { name: "Notifications", href: "/app/notifications", icon: Bell },
-    { name: "Profile", href: "/app/profile", icon: User },
-  ];
-
-  const moreOptions = [
-    { name: "Help & Support", href: "/app/help" },
-    { name: "Settings", href: "/app/settings" },
-    { name: "Privacy Policy", href: "/app/privacy" },
-    { name: "Logout", href: "/logout" },
-  ];
-
-  const handlePhotoSelection = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedPhoto(URL.createObjectURL(file));
+  const isActive = (path) => {
+    if (path === '/app') {
+      return location.pathname === path;
     }
-  };
-
-  const handleVideoSelection = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedVideo(URL.createObjectURL(file));
-    }
+    return location.pathname.startsWith(path);
   };
 
   return (
-    <div className="flex bg-gray-50 text-sm font-sans antialiased min-h-screen">
-      {/* Sidebar (Desktop) */}
-      <div className="hidden sm:flex w-20 bg-white flex-col shadow-sm pl-4 pr-4">
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Create Post Modal */}
+      <CreatePostModal isOpen={showCreatePost} onClose={() => setShowCreatePost(false)} />
+
+      {/* Sidebar */}
+      <div className="hidden sm:flex w-64 bg-white border-r flex-col">
         {/* Logo */}
-        <div className="p-4 flex items-center justify-center">
-          <Link to="/app">
-            <img src={Logo} alt="Logo" className="w-10 h-10 rounded-md mt-4" />
+        <div className="p-6">
+          <Link to="/app" className="flex items-center">
+            <img src={Logo} alt="Logo" className="w-8 h-8 rounded-md" />
+            <span className="ml-2 text-xl font-bold text-gray-900">Social App</span>
           </Link>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-3 space-y-2 fixed mt-4">
-          {navigation.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                title={item.name}
-                onClick={(e) => {
-                  if (item.onClick) {
-                    e.preventDefault();
-                    item.onClick(); // This will trigger the modal for "Post"
-                  }
-                }}
-                className={`group flex items-center justify-center px-3 py-2 rounded-full transition-all ${
-                  isActive
-                    ? "bg-blue-100 text-blue-600"
-                    : "text-gray-900 hover:bg-gray-100"
-                }`}
-              >
-                <div className="relative flex-shrink-0">
-                  <item.icon
-                    size={28}
-                    className={`${
-                      isActive
-                        ? "text-blue-600"
-                        : "text-gray-900 group-hover:text-blue-500"
-                    }`}
-                  />
-                  {item.badge && (
-                    <span className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
+        {/* Main Navigation */}
+        <nav className="flex-1 px-4 space-y-1">
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              to={item.href}
+              onClick={(e) => {
+                if (item.onClick) {
+                  e.preventDefault();
+                  item.onClick();
+                }
+              }}
+              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                isActive(item.href)
+                  ? "bg-blue-50 text-blue-600"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <item.icon size={20} className="mr-3" />
+              {item.name}
+            </Link>
+          ))}
         </nav>
 
-        {/* Bottom */}
-        <div className="p-4 mt-auto space-y-2">
-          <Link
-            to="/app/help"
-            title="Help & Support"
-            className="flex items-center justify-center px-3 py-2 rounded-full text-gray-900 hover:bg-gray-100"
-          >
-            <HelpCircle size={28} className="text-gray-900" />
-          </Link>
-          <Link
-            to="/app/profile"
-            title="Profile"
-            className="flex items-center justify-center px-3 py-2 rounded-full text-gray-900 hover:bg-gray-100"
-          >
-            <img
-              src="https://via.placeholder.com/32"
-              alt="User Profile"
-              className="w-8 h-8 rounded-full"
-            />
-          </Link>
+        {/* Secondary Navigation */}
+        <div className="px-4 py-4 space-y-1">
+          {secondaryNav.map((item) => (
+            <Link
+              key={item.name}
+              to={item.href}
+              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                isActive(item.href)
+                  ? "bg-blue-50 text-blue-600"
+                  : "text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <item.icon size={20} className="mr-3" />
+              {item.name}
+            </Link>
+          ))}
+          
+          {/* User Profile */}
+          <div className="mt-4 pt-4 border-t">
+            <div className="flex items-center px-4 py-3">
+              <img
+                src={user?.avatar || 'https://via.placeholder.com/32'}
+                alt="Profile"
+                className="w-8 h-8 rounded-full"
+              />
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900">{user?.fullName || 'User'}</p>
+                <p className="text-xs text-gray-500">@{user?.username || 'username'}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <LogOut size={20} className="mr-3" />
+              Logout
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Navigation */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white shadow-t z-40">
-        <nav className="flex justify-around py-2 px-2">
-          {mobileNavigation.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                title={item.name}
-                onClick={(e) => {
-                  if (item.onClick) {
-                    e.preventDefault();
-                    item.onClick(); // This will trigger the modal for "Post"
-                  }
-                }}
-                className={`group flex items-center justify-center px-2 py-2 rounded-full transition-all ${
-                  isActive
-                    ? "text-blue-600"
-                    : "text-gray-900 hover:bg-gray-100"
-                }`}
-              >
-                <item.icon
-                  size={24}
-                  className={`${
-                    isActive
-                      ? "text-blue-600"
-                      : "text-gray-900 group-hover:text-blue-500"
-                  }`}
-                />
-              </Link>
-            );
-          })}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t sm:hidden">
+        <nav className="flex justify-around p-2">
+          {navigation.slice(0, 5).map((item) => (
+            <Link
+              key={item.name}
+              to={item.href}
+              className={`p-2 text-center ${
+                isActive(item.href) ? "text-blue-600" : "text-gray-500"
+              }`}
+            >
+              <item.icon size={24} />
+            </Link>
+          ))}
         </nav>
       </div>
 
-      {/* More Popup */}
-      {isMoreOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-sm px-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-sm p-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">More</h2>
-              <button
-                onClick={() => setIsMoreOpen(false)}
-                className="text-gray-500 hover:text-gray-900"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="space-y-2">
-              {moreOptions.map((option) => (
-                <Link
-                  key={option.name}
-                  to={option.href}
-                  onClick={() => setIsMoreOpen(false)}
-                  className="block px-3 py-2 text-gray-900 hover:bg-gray-100 rounded-md"
-                >
-                  {option.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Post Popup */}
-      {isPostOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-sm px-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 space-y-4 relative overflow-y-auto max-h-[90vh]">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-black">Create a Post</h2>
-              <button
-                onClick={() => setIsPostOpen(false)}
-                className="text-gray-500 hover:text-gray-900 absolute top-4 right-4"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="flex items-center space-x-3">
-              <img
-                src="/default-avatar.jpg"
-                alt="User Avatar"
-                className="w-10 h-10 rounded-full"
-              />
-              <div>
-                <p className="text-black font-medium">Abhaya Bikram Shahi</p>
-                <p className="text-gray-500 text-sm">@abhayashahi</p>
-              </div>
-            </div>
-            <textarea
-              rows={4}
-              placeholder="What's on your mind?"
-              className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400 text-black"
-            />
-            <div className="space-y-4">
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <header className="bg-white shadow-sm sticky top-0 z-30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-4">
+              <h1 className="text-xl font-semibold text-gray-900">
+                {navigation.find(item => isActive(item.href))?.name || 'Home'}
+              </h1>
               <div className="flex items-center space-x-4">
-                <label className="flex items-center space-x-2 cursor-pointer text-gray-600 hover:text-pink-600">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 10.828V7h-2.828z"
-                    />
-                  </svg>
-                  <span className="text-sm">Photo</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoSelection}
-                    className="hidden"
-                  />
-                </label>
-                <label className="flex items-center space-x-2 cursor-pointer text-gray-600 hover:text-pink-600">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M15 10l4.553-2.276A2 2 0 0122 9.618v4.764a2 2 0 01-2.447 1.894L15 14m-6 0l-4.553 2.276A2 2 0 012 14.382V9.618a2 2 0 012.447-1.894L9 10m6 0l-6 4m6-4L9 6m0 4l6-4"
-                    />
-                  </svg>
-                  <span className="text-sm">Video</span>
-                  <input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoSelection}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-              {selectedPhoto && (
-                <div className="mt-4">
-                  <p className="text-sm font-medium text-gray-700">Selected Photo:</p>
-                  <img
-                    src={selectedPhoto}
-                    alt="Selected"
-                    className="w-full h-auto rounded-md mt-2"
-                  />
-                </div>
-              )}
-              {selectedVideo && (
-                <div className="mt-4">
-                  <p className="text-sm font-medium text-gray-700">Selected Video:</p>
-                  <video
-                    controls
-                    src={selectedVideo}
-                    className="w-full h-auto rounded-md mt-2"
-                  />
-                </div>
-              )}
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex space-x-4">
-                <button className="flex items-center space-x-2 text-gray-600 hover:text-pink-600">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M14.752 11.168l-3.197-2.132A4 4 0 1012 16m0 0v1m0-1h1m-1 0H11"
-                    />
-                  </svg>
-                  <span className="text-sm">Feeling</span>
+                <button 
+                  className="p-2 text-gray-500 hover:text-gray-700 sm:hidden"
+                  onClick={() => setShowCreatePost(true)}
+                >
+                  <PlusSquare size={20} />
+                </button>
+                <button className="p-2 text-gray-500 hover:text-gray-700 sm:hidden">
+                  <Bell size={20} />
+                </button>
+                <button className="p-2 text-gray-500 hover:text-gray-700 sm:hidden">
+                  <MessageCircle size={20} />
                 </button>
               </div>
-              <button
-                className="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700"
-                onClick={() => {
-                  // Add post handling logic here
-                  setIsPostOpen(false);
-                }}
-              >
-                Post
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        </header>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Topbar */}
-        <div className="h-14 bg-white flex items-center justify-between px-4 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900 tracking-tight">
-            {navigation.find((item) => item.href === location.pathname)?.name || "App"}
-          </h2>
-          <div className="flex items-center gap-2">
-            <button className="p-2 hover:bg-gray-100 rounded-full" aria-label="Notifications">
-              <Bell size={28} className="text-gray-900" />
-            </button>
-            <button className="p-2 hover:bg-gray-100 rounded-full" aria-label="Add new">
-              <Plus size={28} className="text-gray-900" />
-            </button>
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <Outlet />
           </div>
-        </div>
-
-        {/* Content */}
-        <main className="flex-1 overflow-auto bg-gray-50 p-4 pb-16 sm:pb-4">
-          {children}
         </main>
       </div>
     </div>
